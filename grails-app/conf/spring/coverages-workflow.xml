@@ -16,7 +16,7 @@
     <beans:bean id="coastalDistanceCoverageRule" class="com.danveloper.rules.coverages.CoastalDistanceCoverageRule"/>
     <beans:bean id="theftCoverageRule" class="com.danveloper.rules.coverages.TheftCoverageRule"/>
     <beans:bean id="floodCoverageRule" class="com.danveloper.rules.coverages.FloodCoverageRule"/>
-    <beans:bean id="coverageAggregatorService" class="com.danveloper.services.AggregatorService" />
+    <beans:bean id="aggregatorService" class="com.danveloper.services.AggregatorService" />
 
     <!-- workflow to determine which coverages should be available for the quote -->
     <gateway id="coveragesWorkflowGateway" default-request-channel="coverages-input" service-interface="com.danveloper.gateways.CoveragesWorkflowGateway" />
@@ -34,6 +34,6 @@
     <service-activator input-channel="floodCoverageRuleChannel" output-channel="coverages-output" method="process" ref="floodCoverageRule" />
 
     <!-- Aggregating the list of coverages that are available -->
-    <aggregator method="aggregateCoverages" ref="coverageAggregatorService" input-channel="coverages-output"/>
+    <aggregator method="aggregateCoverages" ref="aggregatorService" input-channel="coverages-output"/>
 
 </beans:beans>

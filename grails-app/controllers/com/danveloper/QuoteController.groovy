@@ -7,12 +7,24 @@ import grails.converters.JSON
 class QuoteController {
     QuotingService quotingService
 
+    def update(Quote quote) {
+        session.quote = quote
+        redirect(action: params.next)
+    }
+
     def index() {
-        def address = new Address(street: "1 Main St", city: "Gainesville", state: "FL", zipcode: 32605, milesFromCoast: 10).save(flush: true);
-        def client = new Client(firstName: "Dan", lastName: "Woods", dateOfBirth: new LocalDate("1984-11-09"), address: address).save(flush: true);
-        def quote = new Quote(client: client, yearOfHouse: 2005, lossCount: 0)
-        //def ratedQuote = quotingService.rateQuote(quote)
-        def coverages = quotingService.getAvailableCoverages(quote)
-        render coverages as JSON
+        if (!session.quote) {
+            session.quote = new Quote()
+        }
+    }
+
+    def coverages() {
+        Quote quote = session.quote
+        [coverages: quotingService.getAvailableCoverages(quote)]
+    }
+
+    def discounts() {
+        Quote quote = session.quote
+        [discounts: quotingService.getAvailableDiscounts(quote)]
     }
 }

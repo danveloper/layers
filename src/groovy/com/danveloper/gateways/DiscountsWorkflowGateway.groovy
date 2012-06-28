@@ -6,5 +6,5 @@ import com.danveloper.Discount
 
 
 interface DiscountsWorkflowGateway {
-    public Quote rateQuote(Quote quote);
+    public List<Discount> getApplicableDiscounts(Quote quote);
 }
