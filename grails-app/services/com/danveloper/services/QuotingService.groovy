@@ -4,11 +4,11 @@ import com.danveloper.Quote
 import com.danveloper.gateways.CoveragesWorkflowGateway
 
 class QuotingService {
-    def discountsGateway
+    def discountsWorkflowGateway
     def coveragesWorkflowGateway
 
     def getAvailableDiscounts(Quote quote) {
-        discountsGateway.getApplicableDiscounts(quote)
+        discountsWorkflowGateway.getApplicableDiscounts(quote)
     }
 
     def getAvailableCoverages(Quote quote) {

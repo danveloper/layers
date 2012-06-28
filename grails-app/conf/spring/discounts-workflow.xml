@@ -18,7 +18,7 @@
     <beans:bean id="nonArsonistDiscountRule" class="com.danveloper.rules.discounts.NonArsonistDiscountRule"/>
 
     <!-- workflow to determine which discounts should be available for the quote -->
-    <gateway id="discountsGateway" default-request-channel="discounts-input" service-interface="com.danveloper.gateways.DiscountsWorkflowGateway" />
+    <gateway id="discountsWorkflowGateway" default-request-channel="discounts-input" service-interface="com.danveloper.gateways.DiscountsWorkflowGateway" />
     <chain input-channel="discounts-input">
         <recipient-list-router>
             <recipient channel="discountsBusinessRuleChannel"/>
