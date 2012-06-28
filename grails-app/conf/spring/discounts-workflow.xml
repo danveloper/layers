@@ -1,0 +1,31 @@
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+        ">
+
+    <!-- Channels -->
+    <channel id="discounts-input"/>
+    <channel id="discounts-output"/>
+
+    <!-- Discount Rules -->
+    <beans:bean id="discountsBusinessRule" class="com.danveloper.rules.discounts.SeniorCitizenDiscountRule"/>
+    <beans:bean id="nolossDiscountRule" class="com.danveloper.rules.discounts.NoLossDiscountRule"/>
+    <beans:bean id="nonArsonistDiscountRule" class="com.danveloper.rules.discounts.NonArsonistDiscountRule"/>
+
+    <!-- Service for final manipulation before returning the object to the caller -->
+    <beans:bean id="ratingResponseService" class="com.danveloper.services.RatingResponseService"/>
+
+    <!-- rating workflow -->
+    <gateway id="ratingGateway" default-request-channel="discounts-input" default-reply-channel="discounts-output" service-interface="com.danveloper.gateways.DiscountsWorkflowGateway" />
+    <chain input-channel="discounts-input" output-channel="discounts-output">
+        <service-activator method="process" ref="discountsBusinessRule" />
+        <service-activator method="process" ref="nolossDiscountRule" />
+        <service-activator method="process" ref="nonArsonistDiscountRule" />
+    </chain>
+    <chain input-channel="discounts-output">
+        <service-activator method="process" ref="ratingResponseService" />
+    </chain>
+
+</beans:beans>

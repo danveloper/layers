@@ -1,0 +1,39 @@
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+        ">
+
+    <!-- Channels -->
+    <channel id="coverages-input"/>
+    <channel id="coverages-output"/>
+    <channel id="coastalDistanceRuleChannel"/>
+    <channel id="theftCoverageRuleChannel"/>
+    <channel id="floodCoverageRuleChannel"/>
+
+    <!-- Our beans for the coverage workflow -->
+    <beans:bean id="coastalDistanceCoverageRule" class="com.danveloper.rules.coverages.CoastalDistanceCoverageRule"/>
+    <beans:bean id="theftCoverageRule" class="com.danveloper.rules.coverages.TheftCoverageRule"/>
+    <beans:bean id="floodCoverageRule" class="com.danveloper.rules.coverages.FloodCoverageRule"/>
+    <beans:bean id="coverageAggregatorService" class="com.danveloper.services.AggregatorService" />
+
+    <!-- workflow to determine which coverages should be available for the quote -->
+    <gateway id="coveragesWorkflowGateway" default-request-channel="coverages-input" service-interface="com.danveloper.gateways.CoveragesWorkflowGateway" />
+    <chain input-channel="coverages-input">
+        <recipient-list-router apply-sequence="true">
+            <recipient channel="coastalDistanceRuleChannel"/>
+            <recipient channel="theftCoverageRuleChannel"/>
+            <recipient channel="floodCoverageRuleChannel"/>
+        </recipient-list-router>
+    </chain>
+
+    <!-- Services for applying the "should-coverage-be-available" rules -->
+    <service-activator input-channel="coastalDistanceRuleChannel" output-channel="coverages-output" method="process" ref="coastalDistanceCoverageRule" />
+    <service-activator input-channel="theftCoverageRuleChannel" output-channel="coverages-output" method="process" ref="theftCoverageRule" />
+    <service-activator input-channel="floodCoverageRuleChannel" output-channel="coverages-output" method="process" ref="floodCoverageRule" />
+
+    <!-- Aggregating the list of coverages that are available -->
+    <aggregator method="aggregateCoverages" ref="coverageAggregatorService" input-channel="coverages-output"/>
+
+</beans:beans>
