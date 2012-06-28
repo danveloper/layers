@@ -6,4 +6,5 @@
         ">
     <beans:import resource="discounts-workflow.xml"/>
     <beans:import resource="coverages-workflow.xml"/>
+    <beans:import resource="quote-view-workflow.xml"/>
 </beans:beans>

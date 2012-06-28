@@ -1,0 +1,26 @@
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.1.xsd
+        ">
+
+    <!-- Channels -->
+    <channel id="quote-view-input"/>
+    <channel id="quote-view-output"/>
+
+    <!-- Our beans for the quote screen workflow -->
+    <beans:bean id="aopDeductibleRule" class="com.danveloper.rules.quotescreen.AopDeductibleBusinessRule"/>
+    <beans:bean id="townOrRowhouseBusinessRule" class="com.danveloper.rules.quotescreen.TownOrRowhouseBusinessRule"/>
+
+    <!-- workflow to apply view-layer business rules for the Quote screen -->
+    <gateway id="quoteScreenWorkflowGateway" default-request-channel="quote-view-input" service-interface="com.danveloper.gateways.QuoteScreenWorkflowGateway" />
+
+    <!-- chain on the gateway so that we can hook in our business rule classes -->
+    <chain input-channel="quote-view-input">
+        <!-- This business rule applies values directly to the QuoteCommand object, so we don't need explicit return values -->
+        <service-activator method="process" ref="aopDeductibleRule" />
+        <service-activator method="process" ref="townOrRowhouseBusinessRule"/>
+    </chain>
+
+</beans:beans>

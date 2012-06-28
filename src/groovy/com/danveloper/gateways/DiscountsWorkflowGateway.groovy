@@ -1,10 +1,8 @@
 package com.danveloper.gateways
 
-import com.danveloper.Coverage
-import com.danveloper.Quote
 import com.danveloper.Discount
-
+import com.danveloper.commands.QuoteCommand
 
 interface DiscountsWorkflowGateway {
-    public List<Discount> getApplicableDiscounts(Quote quote);
+    public List<Discount> getApplicableDiscounts(QuoteCommand quote);
 }

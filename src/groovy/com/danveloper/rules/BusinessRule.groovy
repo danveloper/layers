@@ -1,7 +1,7 @@
 package com.danveloper.rules
 
-import com.danveloper.Quote
+import com.danveloper.commands.QuoteCommand
 
 interface BusinessRule {
-    public Object process(Quote quote);
+    public Object process(QuoteCommand quoteCommand);
 }

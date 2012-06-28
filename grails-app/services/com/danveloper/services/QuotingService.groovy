@@ -1,17 +1,16 @@
 package com.danveloper.services
 
-import com.danveloper.Quote
-import com.danveloper.gateways.CoveragesWorkflowGateway
+import com.danveloper.commands.QuoteCommand
 
 class QuotingService {
     def discountsWorkflowGateway
     def coveragesWorkflowGateway
 
-    def getAvailableDiscounts(Quote quote) {
-        discountsWorkflowGateway.getApplicableDiscounts(quote)
+    def getAvailableDiscounts(QuoteCommand quoteCommand) {
+        discountsWorkflowGateway.getApplicableDiscounts(quoteCommand)
     }
 
-    def getAvailableCoverages(Quote quote) {
-        coveragesWorkflowGateway.getApplicableCoverages(quote)
+    def getAvailableCoverages(QuoteCommand quoteCommand) {
+        coveragesWorkflowGateway.getApplicableCoverages(quoteCommand)
     }
 }
